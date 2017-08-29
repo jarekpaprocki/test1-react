@@ -44,9 +44,9 @@ class Inpucik extends React.Component {
     }
 }
 
-const Taskfield = ({todos}) =>{
+const Taskfield = ({todos, remove}) =>{
     const todoNode = todos.map((todo) =>{
-        return (<li key={todo.id}>{todo.text}</li>);
+        return (<li onClick={()=>remove(todo.id)} key={todo.id}>{todo.text}</li>);
     });
     return (
         <fieldset>
@@ -74,16 +74,23 @@ class TodoApp extends React.Component {
 
     addTodo(val)
     {
-        const todo = {text: val, id:getRandomizer(3,999)};
+        const todo = {text: val, id:getRandomizer(3,999999)};
         this.state.data.push(todo);
         this.setState({data: this.state.data});
+    }
+    remove(todoId){
+        const remainder = this.state.data.filter((todo)=>{
+            if(todo.id!==todoId) return todo;
+        });
+        this.setState({data: remainder});
     }
 
     render()
     {
         return (
             <div>
-                <Inpucik buttonName="Add" addTodo={this.addTodo.bind(this)}/><br/> <Taskfield todos={this.state.data}/>
+                <Inpucik buttonName="Add" addTodo={this.addTodo.bind(this)}/><br/>
+                <Taskfield todos={this.state.data} remove={this.remove.bind(this)}/>
             </div>
         );
     }

@@ -10806,12 +10806,15 @@ var Inpucik = function (_React$Component) {
 }(_react2.default.Component);
 
 var Taskfield = function Taskfield(_ref) {
-    var todos = _ref.todos;
+    var todos = _ref.todos,
+        remove = _ref.remove;
 
     var todoNode = todos.map(function (todo) {
         return _react2.default.createElement(
             'li',
-            { key: todo.id },
+            { onClick: function onClick() {
+                    return remove(todo.id);
+                }, key: todo.id },
             todo.text
         );
     });
@@ -10854,9 +10857,17 @@ var TodoApp = function (_React$Component2) {
     (0, _createClass3.default)(TodoApp, [{
         key: 'addTodo',
         value: function addTodo(val) {
-            var todo = { text: val, id: getRandomizer(3, 999) };
+            var todo = { text: val, id: getRandomizer(3, 999999) };
             this.state.data.push(todo);
             this.setState({ data: this.state.data });
+        }
+    }, {
+        key: 'remove',
+        value: function remove(todoId) {
+            var remainder = this.state.data.filter(function (todo) {
+                if (todo.id !== todoId) return todo;
+            });
+            this.setState({ data: remainder });
         }
     }, {
         key: 'render',
@@ -10866,8 +10877,7 @@ var TodoApp = function (_React$Component2) {
                 null,
                 _react2.default.createElement(Inpucik, { buttonName: 'Add', addTodo: this.addTodo.bind(this) }),
                 _react2.default.createElement('br', null),
-                ' ',
-                _react2.default.createElement(Taskfield, { todos: this.state.data })
+                _react2.default.createElement(Taskfield, { todos: this.state.data, remove: this.remove.bind(this) })
             );
         }
     }]);
